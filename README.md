@@ -1,10 +1,51 @@
 # my_ai_pet_project
 
-**A learning project.** I started it in October 2026 to build hands-on skill in the cloud and retrieval topics I am still learning. The status column below shows what is done; anything marked *Planned* has not been built yet. Nothing in this repository is production experience.
+[![workflow-modernization](https://github.com/grprakasam/my_ai_pet_project/actions/workflows/workflow-modernization.yml/badge.svg)](https://github.com/grprakasam/my_ai_pet_project/actions/workflows/workflow-modernization.yml)
 
-My proven work is in [ADAM AI](https://github.com/grprakasam/adam-ai), the [Workflow Modernization Agent](https://github.com/grprakasam/workflow-modernization-agent) and [AI Exam Builder](https://github.com/grprakasam/Ai_ExamBuilder_Jan26). This repo is where I practise what comes next.
+**My AI pet project, in two tracks:**
 
-## What I am building
+1. **Workflow modernization (built and tested offline).** Converts legacy XML/JSON workflows into Power Automate drafts: deterministic rules first, a bounded LLM second, everything else flagged, and differential testing to check that each draft behaves like the original.
+2. **Regulatory RAG on AWS (learning, in progress since October 2026).** Retrieval evaluation, permission-aware search, an answer-and-verify flow, and deployment on AWS with Terraform.
+
+**What is and isn't proven.** Status labels below show what is built. Track 1 runs on 12 synthetic sample workflows and has not been imported into a live Power Platform tenant. Anything marked *Planned* has not been built yet. Nothing in this repository is production experience.
+
+My other public work: [ADAM AI](https://github.com/grprakasam/adam-ai) and [AI Exam Builder](https://github.com/grprakasam/Ai_ExamBuilder_Jan26).
+
+## Track 1: Workflow modernization (built)
+
+Microsoft retired SharePoint 2013 workflows in SharePoint Online in April 2026 and recommends Power Automate instead. Rebuilding every flow by hand is slow; translating with an LLM alone is fast but unverifiable. This track takes a middle path:
+
+```mermaid
+flowchart LR
+    SRC[Legacy workflow<br/>XML or JSON] --> IR[Typed IR<br/>Pydantic, reference checks]
+    IR --> R{Deterministic<br/>rule?}
+    R -->|yes| MAP[Mapped action]
+    R -->|no| L[Bounded LLM<br/>closed catalog + guards]
+    L -->|pass| MAP
+    L -->|fail| TODO[Flagged step<br/>for a reviewer]
+    MAP --> E[Power Automate<br/>flow definition]
+    TODO --> E
+    E --> DT[Differential test<br/>legacy simulator vs flow simulator]
+```
+
+| Result on 12 synthetic workflows, 29 behavioral tests | Rules only | Rules + bounded LLM (fixture replies) |
+|---|---|---|
+| Actions converted automatically | 53 of 65 (82%) | 62 of 65 (95%) |
+| Behavioral test cases passed | 14 of 29 | 24 of 29 |
+| **Silent failures** (a case fails but nothing was flagged) | **0** | **0** |
+
+The fixture replies are hand-written stand-ins so CI runs offline; they are not recorded model output. CI fails if silent failures ever rise above zero. Full details, guardrails and decision records: [workflow_modernization/README.md](workflow_modernization/README.md).
+
+```bash
+cd workflow_modernization
+pip install -e ".[dev]"
+pytest -q
+python -m wma evaluate          # writes results/latest_scorecard.md
+```
+
+**Next for this track (planned):** a recorded live-model run; an adapter for real SharePoint 2013 and Nintex exports; an import test in a Power Platform developer environment comparing run history with the legacy cases; and the converter deployed as an AWS Lambda behind API Gateway, which ties it to Track 2.
+
+## Track 2: Regulatory RAG on AWS (planned)
 
 A question-answering assistant over **public-domain FDA guidance documents**:
 
@@ -14,12 +55,11 @@ A question-answering assistant over **public-domain FDA guidance documents**:
 4. **Deployed on AWS with Terraform**: infrastructure as code, least-privilege access, monitoring and a cost budget, torn down when not in use.
 5. **Azure comparison**: the same evaluation run against Azure OpenAI through Microsoft Foundry.
 
-## Target architecture (planned)
-
 ```mermaid
 flowchart LR
     U[User] --> GW[API Gateway]
     GW --> AG[Agent API on ECS Fargate<br/>LangGraph: retrieve → answer → verify]
+    GW --> CV[Workflow converter<br/>on Lambda]
     AG --> BR[Amazon Bedrock]
     AG --> VS[(Vector search<br/>OpenSearch Serverless or pgvector)]
     AG --> DB[(DynamoDB<br/>sessions and feedback)]
@@ -32,41 +72,52 @@ Terraform manages every resource. Each service gets its own IAM role with least 
 
 ## Skills map
 
-| Skill I am learning | Where it is used here | Status |
+| Skill | Track | Status |
 |---|---|---|
-| RAG evaluation (recall@k, MRR, faithfulness, abstention rate) | Evaluation harness and question set | Planned |
-| Chunking and search strategies (BM25, dense, hybrid with reranking) | Retrieval experiments | Planned |
-| Vector search (pgvector, OpenSearch) | Retrieval store | Planned |
-| Permission-aware retrieval | Access-label filters and tests | Planned |
-| Multi-agent orchestration (LangGraph) | Answer-and-verify flow | Planned |
-| Terraform | All infrastructure | Planned |
-| AWS API Gateway, Lambda, Step Functions | Request path and ingestion pipeline | Planned |
-| AWS ECS Fargate | Agent API | Planned |
-| AWS S3, DynamoDB | Documents, sessions and feedback | Planned |
-| AWS IAM, Secrets Manager | Least-privilege roles and key handling | Planned |
-| AWS CloudWatch, AWS Budgets | Monitoring, alarms and cost guardrails | Planned |
-| Azure OpenAI, Microsoft Foundry | Comparison run | Planned |
-| Repository, scope and plan | This README and the learning log | Done |
+| Typed intermediate representation and XML/JSON parsing (Pydantic) | 1 | Done |
+| Bounded LLM mapping with guardrails (closed catalog, schema, grounding and confidence checks) | 1 | Done |
+| Differential behavioral testing and a silent-failure CI gate | 1 | Done |
+| Power Platform solution preparation with PAC CLI (tests mock PAC) | 1 | Done |
+| Live-model run, real export adapter, live tenant import test | 1 | Planned |
+| RAG evaluation (recall@k, MRR, faithfulness, abstention rate) | 2 | Planned |
+| Chunking and search strategies (BM25, dense, hybrid with reranking) | 2 | Planned |
+| Vector search (pgvector, OpenSearch) | 2 | Planned |
+| Permission-aware retrieval | 2 | Planned |
+| Multi-agent orchestration (LangGraph) | 2 | Planned |
+| Terraform | 1, 2 | Planned |
+| AWS API Gateway, Lambda, Step Functions | 1, 2 | Planned |
+| AWS ECS Fargate, S3, DynamoDB | 2 | Planned |
+| AWS IAM, Secrets Manager, CloudWatch, Budgets | 1, 2 | Planned |
+| Azure OpenAI, Microsoft Foundry | 2 | Planned |
 
 ## Milestones (targets, not promises)
 
-| Milestone | Target | Outcome I will publish |
+| Milestone | Target | Status |
 |---|---|---|
-| M0. Repository and plan | Oct 2026 | This README |
-| M1. Local baseline: ingestion, pgvector in Docker, evaluation harness | Nov 2026 | First retrieval metrics |
-| M2. Answer-and-verify flow; permission tests | Dec 2026 | Faithfulness and abstention results |
-| M3. AWS deployment with Terraform; monitoring and budget | Dec 2026 – Jan 2027 | Architecture notes, latency and cost per query |
-| M4. Azure comparison; write-up | Jan 2027 | Side-by-side results |
+| M0. Repository and plan | Oct 2026 | Done |
+| M1. Track 1 merged in: converter, tests, scorecard, CI | Oct 2026 | Done |
+| M2. Local RAG baseline: ingestion, pgvector in Docker, evaluation harness | Nov 2026 | Planned |
+| M3. Answer-and-verify flow; permission tests; live-model run for Track 1 | Dec 2026 | Planned |
+| M4. AWS deployment with Terraform (RAG assistant and converter); monitoring and budget | Dec 2026 – Jan 2027 | Planned |
+| M5. Azure comparison; Power Platform tenant import test; write-up | Jan 2027 | Planned |
 
 I am also preparing for the AWS Certified Generative AI Developer – Professional exam alongside this work (target: Q1 2027).
 
-## How results will be reported
+## How results are reported
 
-- Every number states what produced it: unit test, offline run or live cloud run.
+- Every number states what produced it: unit test, fixture or rules-only run, offline run or live cloud run.
 - Failures and wrong answers are published alongside successes.
 - Cloud costs are reported per run; resources are destroyed with `terraform destroy` after each session.
 
 Progress notes: [LEARNING_LOG.md](LEARNING_LOG.md)
+
+## Repository layout
+
+```
+workflow_modernization/   Track 1: converter, tests, samples, scorecard, decision records (MIT licence)
+docs/adr/                 Track 2 decision records (planned)
+LEARNING_LOG.md           Dated progress notes
+```
 
 ## Author
 

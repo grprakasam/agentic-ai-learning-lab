@@ -1,6 +1,8 @@
 # Workflow Modernization Agent
 
-[![ci](https://github.com/grprakasam/workflow-modernization-agent/actions/workflows/ci.yml/badge.svg)](https://github.com/grprakasam/workflow-modernization-agent/actions/workflows/ci.yml)
+[![workflow-modernization](https://github.com/grprakasam/my_ai_pet_project/actions/workflows/workflow-modernization.yml/badge.svg)](https://github.com/grprakasam/my_ai_pet_project/actions/workflows/workflow-modernization.yml)
+
+Track 1 of [my_ai_pet_project](../README.md). Commands below start from the repository root.
 
 **Converts legacy XML/JSON workflows into Power Automate cloud-flow drafts, then uses differential testing to check that each draft behaves like the original.**
 
@@ -90,8 +92,9 @@ Rejected proposals are kept in the TODO placeholder as a suggestion for the revi
 ## Quick start
 
 ```bash
+cd workflow_modernization
 pip install -e ".[dev]"                 # Python 3.11+
-pytest -q                               # 48 tests
+pytest -q                               # 52 tests
 python -m wma evaluate                  # writes results/latest_scorecard.md (offline fixtures)
 python -m wma convert samples/workflows/invoice_approval.xml --out out
 ```

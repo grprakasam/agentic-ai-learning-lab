@@ -1,9 +1,13 @@
-name: ci
+name: workflow-modernization
 
 on:
   push:
     branches: [main]
   pull_request:
+
+defaults:
+  run:
+    working-directory: workflow_modernization
 
 jobs:
   test:
@@ -35,4 +39,4 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: scorecard
-          path: ci-results/
+          path: workflow_modernization/ci-results/
