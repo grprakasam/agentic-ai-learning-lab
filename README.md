@@ -5,11 +5,17 @@
 **My hands-on agentic AI learning lab, in two tracks:**
 
 1. **Workflow modernization (built and tested offline).** Converts legacy XML/JSON workflows into Power Automate drafts: deterministic rules first, a bounded LLM second, everything else flagged, and differential testing to check that each draft behaves like the original.
-2. **Regulatory RAG on AWS (learning, in progress since October 2026).** Retrieval evaluation, permission-aware search, an answer-and-verify flow, and deployment on AWS with Terraform.
+2. **Regulatory RAG on AWS (learning: design done in October 2026, build planned from November 2026).** Retrieval evaluation, permission-aware search, an answer-and-verify flow, and deployment on AWS with Terraform.
 
 **What is and isn't proven.** Status labels below show what is built. Track 1 runs on 12 synthetic sample workflows and has not been imported into a live Power Platform tenant. Anything marked *Planned* has not been built yet. Nothing in this repository is production experience.
 
 My other public work: [ADAM AI](https://github.com/grprakasam/adam-ai) and [AI Exam Builder](https://github.com/grprakasam/Ai_ExamBuilder_Jan26).
+
+## Demo
+
+![Workflow modernization agent: replay of a real offline run](docs/demo/workflow-modernization-demo.gif)
+
+A one-minute replay of a real offline run. The KYC review sample converts 6 actions by rule and 1 through the bounded LLM, and flags 1 step that has no catalog equivalent; the two test cases that differ both trace to that flagged step, so there are no silent failures. Steps without a rule use hand-written fixture replies, not a live model. [MP4 version](docs/demo/workflow-modernization-demo.mp4).
 
 ## Track 1: Workflow modernization (built)
 
@@ -45,7 +51,7 @@ python -m wma evaluate          # writes results/latest_scorecard.md
 
 **Next for this track (planned):** a recorded live-model run; an adapter for real SharePoint 2013 and Nintex exports; an import test in a Power Platform developer environment comparing run history with the legacy cases; and the converter deployed as an AWS Lambda behind API Gateway, which ties it to Track 2.
 
-## Track 2: Regulatory RAG on AWS (planned)
+## Track 2: Regulatory RAG on AWS (design done; build planned)
 
 A question-answering assistant over **public-domain FDA guidance documents**:
 
@@ -118,6 +124,10 @@ workflow_modernization/   Track 1: converter, tests, samples, scorecard, decisio
 docs/adr/                 Track 2 decision records (planned)
 LEARNING_LOG.md           Dated progress notes
 ```
+
+## How this was built
+
+I built this lab in October 2026. Track 1 started as a separate repository ([workflow-modernization-agent](https://github.com/grprakasam/workflow-modernization-agent), now archived) and was merged here with its history. Claude Code is my pair programmer: it drafts code and tests; I set the design (recorded in the decision records), review every change and decide what ships.
 
 ## Author
 
