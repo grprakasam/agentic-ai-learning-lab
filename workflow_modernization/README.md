@@ -1,8 +1,8 @@
 # Workflow Modernization Agent
 
-[![workflow-modernization](https://github.com/grprakasam/my_ai_pet_project/actions/workflows/workflow-modernization.yml/badge.svg)](https://github.com/grprakasam/my_ai_pet_project/actions/workflows/workflow-modernization.yml)
+[![workflow-modernization](https://github.com/grprakasam/agentic-ai-learning-lab/actions/workflows/workflow-modernization.yml/badge.svg)](https://github.com/grprakasam/agentic-ai-learning-lab/actions/workflows/workflow-modernization.yml)
 
-Track 1 of [my_ai_pet_project](../README.md). Commands below start from the repository root.
+Track 1 of [agentic-ai-learning-lab](../README.md). Commands below start from the repository root.
 
 **Converts legacy XML/JSON workflows into Power Automate cloud-flow drafts, then uses differential testing to check that each draft behaves like the original.**
 

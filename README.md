@@ -1,8 +1,8 @@
-# my_ai_pet_project
+# agentic-ai-learning-lab
 
-[![workflow-modernization](https://github.com/grprakasam/my_ai_pet_project/actions/workflows/workflow-modernization.yml/badge.svg)](https://github.com/grprakasam/my_ai_pet_project/actions/workflows/workflow-modernization.yml)
+[![workflow-modernization](https://github.com/grprakasam/agentic-ai-learning-lab/actions/workflows/workflow-modernization.yml/badge.svg)](https://github.com/grprakasam/agentic-ai-learning-lab/actions/workflows/workflow-modernization.yml)
 
-**My AI pet project, in two tracks:**
+**My hands-on agentic AI learning lab, in two tracks:**
 
 1. **Workflow modernization (built and tested offline).** Converts legacy XML/JSON workflows into Power Automate drafts: deterministic rules first, a bounded LLM second, everything else flagged, and differential testing to check that each draft behaves like the original.
 2. **Regulatory RAG on AWS (learning, in progress since October 2026).** Retrieval evaluation, permission-aware search, an answer-and-verify flow, and deployment on AWS with Terraform.

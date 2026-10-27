@@ -2,6 +2,10 @@
 
 Short, dated notes on what I built, what I learned and what went wrong.
 
+## 2026-10-27 (rename)
+
+- Renamed the repository from my_ai_pet_project to agentic-ai-learning-lab, which says more clearly that this is where I learn by building. GitHub redirects the old links.
+
 ## 2026-10-27 (later)
 
 - Merged my Workflow Modernization Agent into this repository as Track 1, with its full commit history, under `workflow_modernization/`. Its CI now runs from the repository root.
