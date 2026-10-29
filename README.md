@@ -127,7 +127,7 @@ LEARNING_LOG.md           Dated progress notes
 
 ## How this was built
 
-I built this lab in October 2026. Track 1 started as a separate repository ([workflow-modernization-agent](https://github.com/grprakasam/workflow-modernization-agent), now archived) and was merged here with its history. Claude Code is my pair programmer: it drafts code and tests; I set the design (recorded in the decision records), review every change and decide what ships.
+I built this lab in October 2026. Track 1 started as a separate repository ([workflow-modernization-agent](https://github.com/grprakasam/workflow-modernization-agent), now archived) and was merged here with its history. AI coding assistants (Claude Code and Codex) are my pair programmers: they draft code and tests; I set the design (recorded in the decision records), review every change and decide what ships.
 
 ## Author
 
